@@ -11,6 +11,10 @@ export default {
         /* Yarn PnP workaround: see https://www.npmjs.com/package/@snowpack/plugin-typescript */
         ...(process.versions.pnp ? { tsc: 'yarn pnpify tsc' } : {}),
       },
+      '@snowpack/plugin-webpack',
+      {
+        /* see "Plugin Options" below */
+      },
     ],
   ],
   routes: [
