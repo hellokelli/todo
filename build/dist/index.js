@@ -3,8 +3,14 @@ import confetti from "../_snowpack/pkg/canvas-confetti.js";
 const list = document.querySelector("#list");
 const form = document.querySelector("#add-task-form");
 const input = document.querySelector("#add-item");
+const clear = document.querySelector("#button-clear");
 const tasks = loadTasks();
 tasks.forEach(addListItem);
+clear?.addEventListener("click", (e) => {
+  console.log("clear all");
+  let blank = Array();
+  localStorage.setItem("TASKS", blank);
+});
 form?.addEventListener("submit", (e) => {
   e.preventDefault();
   if (input?.value == "" || input?.value == null)
@@ -29,11 +35,15 @@ function addListItem(task) {
   checkbox.addEventListener("change", () => {
     task.completed = checkbox.checked;
     saveTasks();
-    if (checkbox.checked == true)
+    if (checkbox.checked == true) {
       popConfetti();
+      item.setAttribute("class", "list-group-item bg-light d-flex justify-content-between align-items-start text-muted");
+    }
   });
   checkbox.type = "checkbox";
   checkbox.checked = task.completed;
+  if (task.completed == true)
+    item.setAttribute("class", "list-group-item bg-light d-flex justify-content-between align-items-start text-muted");
   const remove = document.createElement("span");
   remove.innerHTML = "x";
   remove.setAttribute("class", "badge bg-dark rounded-pill");
@@ -57,9 +67,14 @@ function saveTasks() {
 }
 function loadTasks() {
   const taskJSON = localStorage.getItem("TASKS");
-  if (taskJSON == null)
+  if (taskJSON == null || taskJSON.length === 0)
     return [];
-  return JSON.parse(taskJSON);
+  let JSONarray = JSON.parse(taskJSON);
+  JSONarray.sort(function(a, b) {
+    return b.completed - a.completed;
+  });
+  JSONarray.reverse();
+  return JSONarray;
 }
 function removeTask(task) {
   console.log(task);

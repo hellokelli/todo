@@ -11,8 +11,16 @@ type Task = {
 const list = document.querySelector<HTMLUListElement>("#list")
 const form = document.querySelector<HTMLFormElement>("#add-task-form")
 const input = document.querySelector<HTMLInputElement>("#add-item")
+const clear = document.querySelector<HTMLInputElement>("#button-clear")
 const tasks: Task[] = loadTasks()
 tasks.forEach(addListItem)
+
+clear?.addEventListener("click", e=>{
+  console.log('clear all')
+  let blank:any = Array() 
+  localStorage.setItem("TASKS", blank)
+
+})
 
 form?.addEventListener("submit", e=>{
   e.preventDefault()
@@ -31,6 +39,8 @@ form?.addEventListener("submit", e=>{
   input.value = ""
 })
 
+
+
 function addListItem(task: Task){
   const item = document.createElement("li")
   const label = document.createElement("label")
@@ -41,11 +51,16 @@ function addListItem(task: Task){
   checkbox.addEventListener("change", ()=>{
     task.completed = checkbox.checked
     saveTasks()
-    if(checkbox.checked == true)
-    popConfetti()
+    if(checkbox.checked == true){
+      popConfetti()
+      item.setAttribute("class","list-group-item bg-light d-flex justify-content-between align-items-start text-muted")
+    }
+    
   })
   checkbox.type = "checkbox"
   checkbox.checked = task.completed
+  if(task.completed == true)
+    item.setAttribute("class","list-group-item bg-light d-flex justify-content-between align-items-start text-muted")
   const remove = document.createElement("span")
   remove.innerHTML = "x"
   remove.setAttribute("class","badge bg-dark rounded-pill")
@@ -77,8 +92,11 @@ function saveTasks(){
 
 function loadTasks(): Task[] {
   const taskJSON = localStorage.getItem("TASKS")
-  if(taskJSON == null) return []
-  return JSON.parse(taskJSON)
+  if(taskJSON == null || taskJSON.length===0) return []
+  let JSONarray = JSON.parse(taskJSON)
+  JSONarray.sort(function(a:Array<String|boolean|Date>,b:Array<String|boolean|Date>){return b.completed -a.completed});
+  JSONarray.reverse()
+  return JSONarray
 }
 
 function removeTask(task: Task){

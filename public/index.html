@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="Kelli Miguez">
-
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <title>My ToDo App</title>
 
     
@@ -44,9 +45,15 @@
 
     <div class="container">
       <div class="col-md-4">
-        <h1>ToDo</h1>
+        <div class="row">
+          <div class="col">
+            <h1><img src="apple-touch-icon.png" class="me-3" height="32px">ToDo</h1>
+          </div>
+          <div class="col text-end">
+            <button class="btn btn-warning btn-sm" type="button" id="button-clear">Clear All</button>
+          </div>
+        </div>
         
-
         <form id="add-task-form">
           <div class="input-group mb-3">
             <input type="text" id="add-item" class="form-control" placeholder="Enter a Task" aria-label="Task" aria-describedby="button-addon2">
